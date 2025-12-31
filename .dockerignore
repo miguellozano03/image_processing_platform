@@ -1,0 +1,13 @@
+
+# Ignorar archivos innecesarios para la imagen
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+venv/
+.git/
+*.sqlite3
+media/
+staticfiles/
+*.log

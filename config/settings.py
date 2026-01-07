@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     #Own Apps
     "accounts",
     "image_manager",
+    "image_processor",
 ]
 
 MIDDLEWARE = [

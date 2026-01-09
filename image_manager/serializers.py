@@ -7,3 +7,8 @@ class ImageSerializer(serializers.ModelSerializer):
         model = Image
         fields = ('id', 'owner', 'file', 'created_at')
         read_only_fields = ['id', 'created_at']
+
+        extra_kwargs = {
+            "name": {"help_text": "Name of the image"},
+            "file": {"help_text": "Image file to upload"}
+        }

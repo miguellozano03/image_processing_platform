@@ -2,11 +2,13 @@ import io
 from PIL import Image as PilImage
 
 from django.http import HttpResponse
+
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
-
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.exceptions import NotFound, PermissionDenied
+
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
 
 from image_processor.processors.filter.filters import FILTERS
 from image_processor.serializers import AnonymousImageSerializer, ApplyFilterSerializer
@@ -16,6 +18,15 @@ class AnonymousImageFilterApply(GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = AnonymousImageSerializer
     parser_classes = [MultiPartParser, FormParser]
+
+    @extend_schema(
+            request=AnonymousImageSerializer,
+            responses={200: OpenApiResponse(
+                description="Filtered image returned as PNG file.",
+                response=None
+            )},
+            description="Apply filter to an image. No sign up or login needed.",
+    )
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -39,6 +50,18 @@ class ImageFilterApply(GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ApplyFilterSerializer
     parser_classes = [FormParser]
+
+    @extend_schema(
+        description="Apply a filter to one of your uploaded images.",
+        request=ApplyFilterSerializer,
+        responses={
+            200: OpenApiResponse(
+                description="Filtered image returned as PNG file.",
+                response=None),
+            404: OpenApiResponse(description="Image not found."),
+            403: OpenApiResponse(description="You don't own this image."),
+        },
+    )
 
     def post(self, request, pk):
         serializer = self.get_serializer(data=request.data)

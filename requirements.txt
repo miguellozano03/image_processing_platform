@@ -11,7 +11,7 @@ djangorestframework-simplejwt>=5.3
 drf-spectacular>=0.27
 
 # Image processing
-Pillow>=10.0
+Pillow==10.3.0
 
 # Environment variables
 python-dotenv>=1.0
@@ -19,6 +19,6 @@ python-dotenv>=1.0
 # Production server (opcional pero recomendado)
 gunicorn>=21.2
 
-Pillow==10.3.0
 
+#Database Connector
 psycopg2-binary==2.9.9

@@ -42,8 +42,8 @@ Backend for image processing and transformation service, it is inspired by platf
 ### Clone the repository
 
 ```bash
-git clone
-cd <repository_name> 
+git https://github.com/miguellozano03/image_processing_platform.git
+cd image_processing_platform
 ```
 
 ### Build and start the containers

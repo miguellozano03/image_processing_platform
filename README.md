@@ -18,12 +18,9 @@ Backend for image processing and transformation service, it is inspired by platf
   - Delete Images
 
 ## Image Transformation
-
-  - Resize - Ongoing
-  - Compress - Ongoing
-  - Rotate - Ongoing
-  - Apply Filters - Ready
-  - Change Format - Ongoing
+  - Compress
+  - Apply Filters
+  - Change Format
 
 ## Stack Used
 

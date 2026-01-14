@@ -8,19 +8,19 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.exceptions import NotFound, PermissionDenied
 
-from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
+from drf_spectacular.utils import extend_schema, OpenApiResponse
 
-from image_processor.processors.filter.filters import FILTERS
-from image_processor.serializers import AnonymousImageSerializer, ApplyFilterSerializer
+from image_processor.processors.filters import FILTERS
+from image_processor.serializers import ImageFilterSerializer, ImageExistingFilterSerializer
 from image_manager.models import Image as ImageModel
 
 class AnonymousImageFilterApply(GenericAPIView):
     permission_classes = [AllowAny]
-    serializer_class = AnonymousImageSerializer
+    serializer_class = ImageFilterSerializer
     parser_classes = [MultiPartParser, FormParser]
 
     @extend_schema(
-            request=AnonymousImageSerializer,
+            request=ImageFilterSerializer,
             responses={200: OpenApiResponse(
                 description="Filtered image returned as PNG file.",
                 response=None
@@ -48,12 +48,12 @@ class AnonymousImageFilterApply(GenericAPIView):
     
 class ImageFilterApply(GenericAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = ApplyFilterSerializer
+    serializer_class = ImageExistingFilterSerializer
     parser_classes = [FormParser]
 
     @extend_schema(
         description="Apply a filter to one of your uploaded images.",
-        request=ApplyFilterSerializer,
+        request=ImageExistingFilterSerializer,
         responses={
             200: OpenApiResponse(
                 description="Filtered image returned as PNG file.",
@@ -77,11 +77,11 @@ class ImageFilterApply(GenericAPIView):
         if image_obj.owner != request.user:
             raise PermissionDenied("It isn't your image")
         
-        img = PilImage.open(image_obj.file.path).convert("RGB")
-        img = FILTERS[filter_name](img)
+        image_obj = PilImage.open(image_obj.file.path).convert("RGB")
+        image_obj = FILTERS[filter_name](image_obj)
 
         buffer = io.BytesIO()
-        img.save(buffer, format="PNG")
+        image_obj.save(buffer, format="PNG")
         buffer.seek(0)
 
         response = HttpResponse(buffer, content_type="image/png")

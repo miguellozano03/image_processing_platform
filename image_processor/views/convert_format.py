@@ -16,7 +16,7 @@ class AnonymousImageConvert(GenericAPIView):
     parser_classes = [MultiPartParser, FormParser]
 
 
-    def post(self, request, pk, *args, **kwargs):
+    def post(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
